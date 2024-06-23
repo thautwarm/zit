@@ -1,0 +1,7 @@
+.nomake_files/
+bin/
+obj/
+.vscode/
+build/
+dist/
+deno.lock
