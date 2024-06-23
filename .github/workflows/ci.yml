@@ -26,6 +26,7 @@ jobs:
       run: bash run-coverage.sh
       timeout-minutes: 2
     - name: Upload coverage to Codecov
+      timeout: 300
       uses: codecov/codecov-action@v4
       with:
         fail_ci_if_error: true
