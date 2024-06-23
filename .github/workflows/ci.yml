@@ -25,8 +25,10 @@ jobs:
     - name: Coverage test
       run: bash run-coverage.sh
       timeout-minutes: 2
+    - name: Print coverage file contents
+      run: cat ./build/coverage/cov.xml
     - name: Upload coverage to Codecov
-      timeout: 300
+      timeout-minutes: 2
       uses: codecov/codecov-action@v4
       with:
         fail_ci_if_error: true
