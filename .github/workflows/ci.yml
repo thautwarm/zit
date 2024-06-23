@@ -22,6 +22,12 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
+    - name: LibXML2 Linux
+      if: runner.os == 'Linux'
+      run: sudo apt-get install -y libxml2
+    - name: LibXML2 MacOS
+      if: runner.os == 'macOS'
+      run: brew install libxml2
     - name: Coverage test
       run: bash run-coverage.sh
       timeout-minutes: 2

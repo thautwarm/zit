@@ -11,7 +11,7 @@ fi
 
 mkdir -p build/coverage
 
-dotnet-coverage collect -f xml dotnet run --project test/zit.test.csproj -o build/coverage/cov.xml
+dotnet-coverage collect -f cobertura dotnet run --project test/zit.test.csproj -o build/coverage/cov.xml
 
 # open -a "Google Chrome" build/coverage/report/index.html
 # start build/coverage/report/index.html
