@@ -4,14 +4,14 @@
 
 In short, `zit` provides a single executable that integrates functionalities of tar/unzip/zip/zstd for all desktop platforms.
 
-You may avoid remembering `-xzf` or stuffs like that, just use `zit` to handle all the things.
+You may avoid remembering `-xzf` or stuff like that, just use `zit` to handle all the things.
 
 ```shell
 # compression
 > zit -c /path/to/dir -o out.zip
 > zit -c /path/to/dir -o out.tar.gz
 > zit -c /path/to/dir -o out.tar.zst
-> zit -c /path/to/dir -o out.zip.zip.zip.zst # works :)
+> zit -c /path/to/dir -o out.zip.zip.zst # works :)
 
 # decompression
 > zit -d out.zip -o /path/to/dir2
@@ -28,7 +28,8 @@ You may avoid remembering `-xzf` or stuffs like that, just use `zit` to handle a
   ```shell
   # chaining
   zit -c -o output.zip.zst /path/to/file_or_dir
-  # this is fine: zit -c /path/to/file_or_dir -o output.zip.zst
+  # also fine:
+  #     zit -c /path/to/file_or_dir -o output.zip.zst
   zit -c -o output.tar.zst /path/to/file_or_dir
   zit -c -o output.tar.gz /path/to/file_or_dir
 
@@ -42,12 +43,13 @@ You may avoid remembering `-xzf` or stuffs like that, just use `zit` to handle a
 2. Decompression (supports `.zip`, `.tar`, `.gz` and `.zst`)
 
   ```shell
-  # chaning
+  # chaining
   zit -d output_dir.tar.gz -o /path/to/output_dir
-  # this is fine: zit -d output_dir.tar.gz -o /path/to/output_dir
+  # also fine:
+  #     zit -d -o /path/to/output_dir output_dir.tar.gz
   zit -d output_dir.tar.zst -o /path/to/output_dir
 
-  # single
+  # single format
   zit -d output_dir.zip -o /path/to/output_dir
   zit -d output_dir.tar -o /path/to/output_dir
   zit -d output_dir.gz -o /path/to/output_file
@@ -56,7 +58,7 @@ You may avoid remembering `-xzf` or stuffs like that, just use `zit` to handle a
 
 Besides, this is the CLI help:
 
-```bash
+```
 > zit -h
 Usage: zit [options] path (version 0.1.2)
 Options:
@@ -74,11 +76,11 @@ Options:
 `zit` is useful in the following scenarios:
 
 1. build system (`zit` is designed for the [NoMake](https://github.com/thautwarm/nomake) build system)
-2. CI/CD system
+2. CI/CD (Continuous Integration/Continuous Deployment)
 
 ## Source Build
 
-You need the following componets to proceed the cross compilation.
+You need the following components to proceed the cross compilation.
 
 1. [.NET 7 or above](https://dotnet.microsoft.com/en-us/download)
 2. [Deno](https://deno.com/)
@@ -125,10 +127,10 @@ Then you run the following commands:
 
 It's welcome to contribute to `zit` by adding more formats or improving the existing ones (e.g., scalability).
 
-`zit` is well-orgainzed and separated from concerns. You might modify `zit/Ops.cs` for adding new compression/decompression backends.
+`zit` is well-organized and separated from concerns. You might modify `zit/Ops.cs` for adding new compression/decompression backends.
 
-Remember to add test for your changes. See `test/Test.tar.gz.cs`, `test/Test.zip`, `test/Test.tar.zst` for examples.
+Remember to add test for your changes. See `test/Test.tar.gz.cs`, `test/Test.zip.cs`, `test/Test.tar.zst.cs` for examples.
 
 # License
 
-`zit` is licnesed under the MIT license. You are free to use it in any way you like.
+`zit` is licensed under the MIT license. You are free to use it in any way you like.

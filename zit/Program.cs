@@ -57,6 +57,12 @@ public static class Program
         helpDoc += "  -v,--version  Print the version.\n";
         parser.Help(helpDoc);
 
+        parser.ShortcutFlag("v", "version", (opts) =>
+        {
+            Console.WriteLine(GeneratedVersion.Value);
+            Environment.Exit(0);
+        });
+
         parser.ShortcutFlag("h", "help", (opts) =>
         {
             parser.PrintHelp();
