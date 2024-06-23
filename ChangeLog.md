@@ -1,5 +1,9 @@
 # ChangeLog
 
+## v0.1.3 (dev)
+
+- Distrbution filenames now include the version, e.g., `zit-linux-x64-0.1.2.zip`.
+
 ## v0.1.2
 
 - Formats: `.zip`, `.tar`, `.gz` and `.zst`.

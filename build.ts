@@ -58,20 +58,19 @@ const currentIdentifier = (() => {
 })();
 
 
-
 const hostZitBuiltPath = fixExe(`dist/${currentIdentifier}/zit`, currentIdentifier)
 
 for (const identifier of BuildConfig.supportedIdentifiers) {
   NM.target(
     {
-      name: `dist/zit-${identifier}.zip`,
+      name: distFile(identifier),
       deps: {
         regular: NM.Path.glob("zit/**/*.cs"),
         config: NM.Path.glob("zit/**/*.csproj"),
         version: "zit/GeneratedVersion.cs",
         current: identifier == currentIdentifier
           ? []
-          : [`dist/zit-${currentIdentifier}.zip`],
+          : [distFile(currentIdentifier)],
       },
       async build({ target }) {
         await new NM.Path("dist").join(identifier).mkdir({
@@ -106,9 +105,7 @@ NM.target(
     name: "dist",
     virtual: true,
     doc: `Build all the binaries`,
-    deps: BuildConfig.supportedIdentifiers.map((identifier) =>
-      `dist/zit-${identifier}.zip`
-    ),
+    deps: BuildConfig.supportedIdentifiers.map(distFile),
     build() {
       NM.Log.ok("All binaries are built!");
     },
@@ -124,4 +121,9 @@ function fixExe(p: string, identifier: string)
         return p + ".exe";
     }
     return p;
+}
+
+function distFile(identifier: string)
+{
+    return `dist/zit-${identifier}-${BuildConfig.version}.zip`;
 }
