@@ -8,7 +8,7 @@ internal sealed class CompressionOps
     internal static void Zip(string inputPath, string outputFile)
     {
         using var assuredDir = new AssureDirectory(inputPath);
-        ZipFile.CreateFromDirectory(assuredDir.directory, outputFile, CompressionLevel.Optimal, includeBaseDirectory: false);
+        ZipFile.CreateFromDirectory(assuredDir.directory, outputFile, CompressionLevel.Optimal, includeBaseDirectory: false, entryNameEncoding: System.Text.Encoding.UTF8);
     }
 
     internal static void Tar(string inputPath, string outputFile)

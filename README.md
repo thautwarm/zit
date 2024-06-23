@@ -6,11 +6,19 @@ In short, `zit` provides a single executable that integrates functionalities of 
 
 You may avoid remembering `-xzf` or stuffs like that, just use `zit` to handle all the things.
 
-```
+```shell
+# compression
 > zit -c /path/to/dir -o out.zip
 > zit -c /path/to/dir -o out.tar.gz
 > zit -c /path/to/dir -o out.tar.zst
 > zit -c /path/to/dir -o out.zip.zip.zip.zst # works :)
+
+# decompression
+> zit -d out.zip -o /path/to/dir2
+> zit -d out.tar.gz -o /path/to/dir3
+> zit -d out.tar.zst -o /path/to/dir4
+> zit -d out.zip.zip.zip.zst -o /path/to/dir5
+# now, we have dir2 = dir3 = dir3 = dir5 = /path/to/dir
 ```
 
 ## Usage
@@ -105,3 +113,22 @@ Then you run the following commands:
 
 5 directories, 15 files
 ```
+
+# Contributions
+
+`zit` now supports the following formats:
+
+- [x] `.zip`
+- [x] `.tar`
+- [x] `.gz`
+- [x] `.zst`
+
+It's welcome to contribute to `zit` by adding more formats or improving the existing ones (e.g., scalability).
+
+`zit` is well-orgainzed and separated from concerns. You might modify `zit/Ops.cs` for adding new compression/decompression backends.
+
+Remember to add test for your changes. See `test/Test.tar.gz.cs`, `test/Test.zip`, `test/Test.tar.zst` for examples.
+
+# License
+
+`zit` is licnesed under the MIT license. You are free to use it in any way you like.
