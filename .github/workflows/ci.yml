@@ -24,6 +24,7 @@ jobs:
       run: dotnet restore
     - name: Coverage test
       run: bash run-coverage.sh
+      timeout-minutes: 2
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
       with:
