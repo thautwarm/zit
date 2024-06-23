@@ -68,9 +68,6 @@ for (const identifier of BuildConfig.supportedIdentifiers) {
         regular: NM.Path.glob("zit/**/*.cs"),
         config: NM.Path.glob("zit/**/*.csproj"),
         version: "zit/GeneratedVersion.cs",
-        current: identifier == currentIdentifier
-          ? []
-          : [distFile(currentIdentifier)],
       },
       async build({ target }) {
         await new NM.Path("dist").join(identifier).mkdir({
@@ -80,20 +77,12 @@ for (const identifier of BuildConfig.supportedIdentifiers) {
         await dotnetLock.lock();
         try {
           await compileProject(identifier);
-
-          await NM.Shell.runChecked(
-            [
-              hostZitBuiltPath,
-              "-c",
-              `dist/${identifier}`,
-              "-o",
-              target,
-            ],
-            { logError: true, printCmd: true },
-          );
         } finally {
           dotnetLock.unlock();
         }
+
+        const exePath = await findExecutable(identifier)
+        exePath.copyTo(target)
         NM.Log.ok(`Built ${identifier}`);
       },
     },
@@ -125,5 +114,15 @@ function fixExe(p: string, identifier: string)
 
 function distFile(identifier: string)
 {
-    return `dist/zit-${identifier}-${BuildConfig.version}.zip`;
+    return fixExe(`dist/zit-${identifier}-${BuildConfig.version}`, identifier);
+}
+
+async function findExecutable(identifier: string)
+{
+    const p = new NM.Path(fixExe(`dist/${identifier}/zit`, identifier));
+    if (!await p.exists())
+    {
+        NM.fail(`Executable not found: ${p.asOsPath()}`);
+    }
+    return p;
 }

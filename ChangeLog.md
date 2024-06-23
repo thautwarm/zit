@@ -2,7 +2,7 @@
 
 ## v0.1.3 (dev)
 
-- Distrbution filenames now include the version, e.g., `zit-linux-x64-0.1.2.zip`.
+- Distrbution filenames now include the version, e.g., `zit-linux-x64-0.1.2`, `zit-win-x64-0.1.2.exe`.
 
 ## v0.1.2
 
