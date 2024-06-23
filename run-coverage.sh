@@ -10,10 +10,8 @@ then
 fi
 
 mkdir -p build/coverage
-dotnet-coverage collect -f cobertura dotnet run --project test/zit.test.csproj -o build/coverage/cov.xml
-mkdir -p build/coverage/report
-reportgenerator -reports:"build/coverage/cov.xml" -targetdir:"build/coverage/report"
-reportgenerator -reports:"build/coverage/cov.xml" -targetdir:"build/coverage/report" -reporttypes:TextSummary
+
+dotnet-coverage collect -f xml dotnet run --project test/zit.test.csproj -o build/coverage/cov.xml
 
 # open -a "Google Chrome" build/coverage/report/index.html
 # start build/coverage/report/index.html
