@@ -33,11 +33,11 @@ jobs:
       timeout-minutes: 2
     - name: Print coverage file contents
       run: cat ./build/coverage/cov.xml
-    - name: Upload coverage to Codecov
-      timeout-minutes: 2
-      uses: codecov/codecov-action@v4
-      with:
-        fail_ci_if_error: true
-        files: ./build/coverage/cov.xml
-        token: ${{ secrets.CODECOV_TOKEN }} # required
-        verbose: true
+    # - name: Upload coverage to Codecov
+    #   timeout-minutes: 2
+    #   uses: codecov/codecov-action@v4
+    #   with:
+    #     fail_ci_if_error: true
+    #     files: ./build/coverage/cov.xml
+    #     token: ${{ secrets.CODECOV_TOKEN }} # required
+    #     verbose: true
