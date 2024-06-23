@@ -17,11 +17,12 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 7.0.x
-
-    - run: |
-      dotnet restore
-      bash run-coverage
-    - uses: codecov/codecov-action@v4
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Coverage test
+      run: bash run-coverage
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
       with:
         fail_ci_if_error: true
         files: ./build/coverage/cov.xml
