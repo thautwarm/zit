@@ -1,6 +1,29 @@
 import { BuildConfig, NM } from "./build.config.ts";
 
-async function compileProject(identifier: string) {
+async function compileProject(
+  identifier: (typeof BuildConfig.supportedIdentifiers)[number],
+  sources: string[],
+  target: string,
+): Promise<"bflat" | "dotnet"> {
+  if (identifier === "linux-x64" || identifier === "linux-arm64") {
+    const build = new NM.Bflat.Build();
+    build.os = "linux";
+    build.mode = "exe";
+    build.optimize = { speed: true };
+    build.referencedILAssemblies = ["deps/ZstdSharp.dll"];
+    build.separateSymbols = true;
+    switch (identifier) {
+      case "linux-arm64":
+        build.arch = "arm64";
+        break;
+      case "linux-x64":
+        build.arch = "x64";
+        break;
+    }
+    build.sourceFiles = Array.from(new Set(sources));
+    await build.run(target);
+    return "bflat";
+  }
   await NM.Shell.runChecked(
     NM.Shell.split(
       `dotnet publish -r ${identifier} -c Release zit/zit.csproj -o dist/${identifier}`,
@@ -10,6 +33,7 @@ async function compileProject(identifier: string) {
       printCmd: true,
     },
   );
+  return "dotnet";
 }
 
 class AsyncLock {
@@ -57,32 +81,44 @@ const currentIdentifier = (() => {
   throw new Error(`Unsupported platform: ${JSON.stringify({ os, arch })}`);
 })();
 
-
-const hostZitBuiltPath = fixExe(`dist/${currentIdentifier}/zit`, currentIdentifier)
+const hostZitBuiltPath = fixExe(
+  `dist/${currentIdentifier}/zit`,
+  currentIdentifier,
+);
 
 for (const identifier of BuildConfig.supportedIdentifiers) {
   NM.target(
     {
       name: distFile(identifier),
       deps: {
-        regular: NM.Path.glob("zit/**/*.cs"),
+        regular: NM.Path.glob("zit/**/*.cs", {
+          exclude: ["**/bin/**/*", "**/obj/**/*"],
+        }),
         config: NM.Path.glob("zit/**/*.csproj"),
         version: "zit/GeneratedVersion.cs",
       },
-      async build({ target }) {
+      async build({ target, deps }) {
         await new NM.Path("dist").join(identifier).mkdir({
           parents: true,
           onError: "ignore",
         });
         await dotnetLock.lock();
+        let buildSystem: "bflat" | "dotnet";
         try {
-          await compileProject(identifier);
+          buildSystem = await compileProject(
+            identifier,
+            [...deps.regular, deps.version],
+            target,
+          );
         } finally {
           dotnetLock.unlock();
         }
 
-        const exePath = await findExecutable(identifier)
-        exePath.copyTo(target)
+        if (buildSystem == "dotnet") {
+          const exePath = await findExecutable(identifier);
+          exePath.copyTo(target);
+        }
+
         NM.Log.ok(`Built ${identifier}`);
       },
     },
@@ -103,26 +139,21 @@ NM.target(
 
 await NM.makefile();
 
-function fixExe(p: string, identifier: string)
-{
-    if (identifier.startsWith("win"))
-    {
-        return p + ".exe";
-    }
-    return p;
+function fixExe(p: string, identifier: string) {
+  if (identifier.startsWith("win")) {
+    return p + ".exe";
+  }
+  return p;
 }
 
-function distFile(identifier: string)
-{
-    return fixExe(`dist/zit-${identifier}-${BuildConfig.version}`, identifier);
+function distFile(identifier: string) {
+  return fixExe(`dist/zit-${identifier}-${BuildConfig.version}`, identifier);
 }
 
-async function findExecutable(identifier: string)
-{
-    const p = new NM.Path(fixExe(`dist/${identifier}/zit`, identifier));
-    if (!await p.exists())
-    {
-        NM.fail(`Executable not found: ${p.asOsPath()}`);
-    }
-    return p;
+async function findExecutable(identifier: string) {
+  const p = new NM.Path(fixExe(`dist/${identifier}/zit`, identifier));
+  if (!await p.exists()) {
+    NM.fail(`Executable not found: ${p.asOsPath()}`);
+  }
+  return p;
 }

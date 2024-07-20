@@ -116,7 +116,13 @@ Then you run the following commands:
 5 directories, 15 files
 ```
 
-# Contributions
+## Acknowledgements
+
+1. `ZstdSharp` (https://github.com/oleg-st/ZstdSharp) for cross-platform Zstd support.
+2. .NET OSS (https://github.com/dotnet) for cross-platform binary distribution.
+3. bflat (https://github.com/bflattened/bflat) for GLIBC 2.17 compatibility (CentOS 7/Ubuntu 18.04) and cross compilation.
+
+## Contributions
 
 `zit` now supports the following formats:
 
@@ -131,6 +137,6 @@ It's welcome to contribute to `zit` by adding more formats or improving the exis
 
 Remember to add test for your changes. See `test/Test.tar.gz.cs`, `test/Test.zip.cs`, `test/Test.tar.zst.cs` for examples.
 
-# License
+## License
 
 `zit` is licensed under the MIT license. You are free to use it in any way you like.
